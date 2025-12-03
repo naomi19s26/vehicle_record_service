@@ -72,7 +72,6 @@ def test_create_vehicle_success(client, sample_vehicle_data):
     assert data["model_name"] == "Civic"
 
 def test_create_vehicle_missing_required_field(client, sample_vehicle_data):
-    """Test creating vehicle with missing required field."""
     data = sample_vehicle_data.copy()
     del data["vin"]
     
@@ -226,7 +225,6 @@ def test_update_vehicle_cannot_change_vin(client, created_vehicle):
     assert "errors" in data
     
 def test_delete_vehicle_success(client, created_vehicle):
-    """Test deleting a vehicle."""
     vin = created_vehicle["vin"]
     
     response = client.delete(f"/vehicle/{vin}")
@@ -237,12 +235,10 @@ def test_delete_vehicle_success(client, created_vehicle):
     assert response.status_code == 404
 
 def test_delete_vehicle_not_found(client):
-    """Test deleting a non-existent vehicle."""
     response = client.delete("/vehicle/NONEXISTENT123456")
     assert response.status_code == 404
 
 def test_create_vehicle_invalid_fuel_type(client, sample_vehicle_data):
-    """Test creating vehicle with invalid fuel type."""
     data = sample_vehicle_data.copy()
     data["fuel_type"] = "InvalidFuel"
     
@@ -258,7 +254,6 @@ def test_create_vehicle_invalid_fuel_type(client, sample_vehicle_data):
     assert any("fuel type" in error.lower() for error in response_data["errors"])
 
 def test_create_vehicle_negative_price(client, sample_vehicle_data):
-    """Test creating vehicle with negative price."""
     data = sample_vehicle_data.copy()
     data["purchase_price"] = -1000
     
@@ -271,7 +266,6 @@ def test_create_vehicle_negative_price(client, sample_vehicle_data):
     assert response.status_code == 422
 
 def test_create_vehicle_invalid_year(client, sample_vehicle_data):
-    """Test creating vehicle with invalid year."""
     data = sample_vehicle_data.copy()
     data["model_year"] = 1000  
     
@@ -346,7 +340,6 @@ def test_multiple_vehicles(client):
 
 
 def test_create_vehicle_null_values(client, sample_vehicle_data):
-    """Test creating vehicle with null values."""
     data = sample_vehicle_data.copy()
     data["manufacturer_name"] = None
     
@@ -370,6 +363,5 @@ def test_update_vehicle_empty_body(client, created_vehicle):
     assert response.status_code in [200, 400, 422]
 
 def test_get_vehicle_special_characters(client):
-    """Test getting vehicle with special characters in VIN."""
     response = client.get("/vehicle/1hgcm82633a00435!")
     assert response.status_code == 404
